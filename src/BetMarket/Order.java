@@ -6,6 +6,7 @@ package BetMarket;
  * @author Alberto Mardomingo
  * @version 20110709 0.1
  */
-public class Order {
-	//TODO implement class.
+public enum Order {
+	// Temporary values
+	BET_UP, BET_DOWN, DONT_BET
 }
