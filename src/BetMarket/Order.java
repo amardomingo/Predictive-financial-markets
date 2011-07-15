@@ -4,7 +4,7 @@ package BetMarket;
  * The order to the market.
  * 
  * @author Alberto Mardomingo
- * @version 20110709 0.1
+ * @version 20110714 0.2
  */
 public enum Order {
 	// Temporary values

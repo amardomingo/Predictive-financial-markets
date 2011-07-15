@@ -8,7 +8,7 @@ import jade.lang.acl.*;
  * Agent for the Bet Market
  * 
  * @author Alberto Mardomingo
- * @version 20110712 0.1
+ * @version 20110714 0.2
  */
 public class BetMarketAgent extends Agent {
 	
@@ -22,8 +22,7 @@ public class BetMarketAgent extends Agent {
 	protected void setup() {
 		betmarket = new BetMarket();
 		// Behavior to receive messages.
-		addBehaviour( new MessageBehavior(receive(), betmarket));
-		
+		addBehaviour( new MessageBehavior(receive(), betmarket, this));
 		/*
 		 * It would probably be a good idea to add a CyclicBehaviour to update the betmarket.
 		 */

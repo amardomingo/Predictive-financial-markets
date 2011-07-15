@@ -9,15 +9,15 @@ import java.util.HashMap;
  * Class to represent the Market.
  * 
  * @author Alberto Mardomingo
- * @version 20110709 0.1
+ * @version 20110714 0.2
  */
 public class BetMarket {
 	
 	// Hashmap with all the agents in the market
 	private HashMap<AID,Integer> agents = new HashMap<AID,Integer>();
-	// Hashmap with the bets
-	// Probably not the best way to implements this
-	private HashMap<String, HashMap<Order,Double>> bets = new HashMap<String, HashMap<Order, Double>>();
+	
+	// Hashmap with the name of the bet and the bet Itself.
+	private HashMap<String, Bet> bets = new HashMap<String, Bet>();
 	
 	/**
 	 * Check if there is a bet with the same name
@@ -36,16 +36,19 @@ public class BetMarket {
 	 * @param prediction - The prediction for it 
 	 * @param order - The order to the market.
 	 * @param inverted - The money to invert.
+	 * @return true if the bet was placed correctly
 	 */
-	public void MakeBet(String name, Prediction prediction, Order order, Double inverted){
+	public boolean MakeBet(String name, Bet bet){
+		boolean result = false;
 		if (!bets.containsKey(name)){
-			HashMap<Order, Double> bet = new HashMap<Order, Double>();
-			bet.put(order,inverted);
-			bets.put(name,bet);
+			// Adds the bet to the market
+			bets.put(name, bet);
+			result = true;
 			System.out.println("Bet " + name + " added to the market.");
 		} else {
 			System.out.println("The bet " + name + "already exists in the market.");
 		}
+		return result;
 	}
 	
 	/**
@@ -82,5 +85,15 @@ public class BetMarket {
 	 */
 	public boolean CheckAgent(AID agentID){
 		return agents.containsKey(agentID);
+	}
+	
+	/**
+	 * Execute all the bets queued after the market is closed
+	 * 
+	 * @return true if everything goes well.
+	 */
+	public boolean RunBets(){
+		//TODO implement RunBets
+		return false;
 	}
 }
