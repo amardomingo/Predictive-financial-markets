@@ -59,6 +59,7 @@ public class BetMarket {
 			if (allowProcess) {
 				// Runs the bet right away
 				runBet(bet);
+				result = true;
 				System.out.println("The bet " + name + " has been realized.");
 			} else {
 				// Adds the bet to the market
@@ -125,6 +126,7 @@ public class BetMarket {
 			//After running the bet, delete it
 			bets.remove(betName);
 		}
+		bets.clear(); // Just in case
 		return result;	
 	}
 	
