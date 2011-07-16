@@ -41,7 +41,7 @@ public class MessageBehavior extends CyclicBehaviour{
 		// I'll use this variable twice, so I declare it here
 		String[] mesContent = message.getContent().split("/");
 		// Checks if the message exists, and if the Sender is in the market.
-		if (message != null && betmarket.CheckAgent(message.getSender())){
+		if (message != null && betmarket.checkAgent(message.getSender())){
 			/*
 			 * Current Message sintaxis:
 			 * NombreAccion/TipoOrden/DineroInvertido/SentidoOrden/DiasDeInversión/CondicionesEspecialesParaOrdenesLimitadas
@@ -62,7 +62,7 @@ public class MessageBehavior extends CyclicBehaviour{
 			
 			// Creating and placing the bet
 			Bet bet = new Bet(name, date, money, order, betType);
-			result = betmarket.MakeBet(name + receiver.getName(), bet);
+			result = betmarket.makeBet(name + receiver.getName(), bet);
 			
 		} else {
 			// Not really sure about this.

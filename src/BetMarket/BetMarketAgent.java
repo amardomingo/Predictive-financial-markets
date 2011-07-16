@@ -26,6 +26,7 @@ public class BetMarketAgent extends Agent {
 		/*
 		 * It would probably be a good idea to add a CyclicBehaviour to update the betmarket.
 		 */
+		addBehaviour(new UpdateBehavior(betmarket));
 		// TODO implement something to update the betmarket.
 	}
 }

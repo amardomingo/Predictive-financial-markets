@@ -4,6 +4,8 @@ import jade.core.Agent;
 import jade.core.AID;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Class to represent the Market.
@@ -25,7 +27,7 @@ public class BetMarket {
 	 * @param name - the name of the bet.
 	 * @return true if the name is in use.
 	 */
-	public boolean ExistBet(String name){
+	public boolean existBet(String name){
 		return bets.containsKey(name);
 	}
 
@@ -38,7 +40,7 @@ public class BetMarket {
 	 * @param inverted - The money to invert.
 	 * @return true if the bet was placed correctly
 	 */
-	public boolean MakeBet(String name, Bet bet){
+	public boolean makeBet(String name, Bet bet){
 		boolean result = false;
 		if (!bets.containsKey(name)){
 			// Adds the bet to the market
@@ -58,7 +60,7 @@ public class BetMarket {
 	 * @param cost - The cost of the bet
 	 * @return true if he has money enough
 	 */
-	public boolean GotCapital(AID agentID, int cost){
+	public boolean gotCapital(AID agentID, int cost){
 		return (cost <= agents.get(agentID));
 	}
 	
@@ -69,9 +71,9 @@ public class BetMarket {
 	 * @param money - The money of the agent.
 	 * @return true if added
 	 */
-	public boolean AddAgent(AID agentID, int money){
+	public boolean addAgent(AID agentID, int money){
 		boolean success = false;
-		if (!CheckAgent(agentID)){
+		if (!checkAgent(agentID)){
 			agents.put(agentID, money);
 			success = true;
 		}
@@ -83,7 +85,7 @@ public class BetMarket {
 	 * @param agentID - The ID of the agent to check
 	 * @return true it the agent exists
 	 */
-	public boolean CheckAgent(AID agentID){
+	public boolean checkAgent(AID agentID){
 		return agents.containsKey(agentID);
 	}
 	
@@ -92,8 +94,16 @@ public class BetMarket {
 	 * 
 	 * @return true if everything goes well.
 	 */
-	public boolean RunBets(){
-		//TODO implement RunBets
-		return false;
+	public boolean runBets(){
+		boolean result = false;
+		//Iterator iter = bets.entrySet().iterator();
+		Set<String> betsNames = bets.keySet();
+		Iterator<String> iter = betsNames.iterator();
+		while (iter.hasNext()){
+			String betName = (String)iter.next();
+			Bet thisBet = bets.get(betName);
+			//TODO run the Bet.
+		}
+		return result;	
 	}
 }

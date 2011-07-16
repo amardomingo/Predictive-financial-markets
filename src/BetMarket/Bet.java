@@ -37,7 +37,7 @@ public class Bet {
 	/**
 	 * if true, the bet is complete
 	 */
-	private double betDone;
+	private boolean betDone;
 	
 	/**
 	 * The order for the bet
@@ -101,7 +101,24 @@ public class Bet {
 	public double getStartValue(){
 		return this.startValue;
 	}
+	/**
+	 * Getter
+	 * 
+	 * @param double with the end value of the bet
+	 */
+	private void setEndValue(double endValue) {
+		this.endValue = endValue;
+	}
 	
+	/**
+	 * Setter
+	 * 
+	 * @return double with the end value of the bet
+	 */
+	private double getEndValue() {
+		return endValue;
+	}
+
 	/**
 	 * Getter
 	 * 
@@ -114,9 +131,26 @@ public class Bet {
 	/**
 	 * Getter
 	 * 
-	 * @return the typeof the bet
+	 * @return the type of the bet
 	 */
 	public BetType getBetType(){
 		return this.betType;
+	}
+	/**
+	 * Getter
+	 * 
+	 * @param bolean - the bet is complete.
+	 */
+	private void setBetDone(boolean betDone) {
+		this.betDone = betDone;
+	}
+	
+	/**
+	 * Settet
+	 * 
+	 * @return true if the bet is complete
+	 */
+	private boolean getBetDone() {
+		return betDone;
 	}
 }
