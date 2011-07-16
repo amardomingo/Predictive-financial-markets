@@ -11,16 +11,29 @@ import java.util.Set;
  * Class to represent the Market.
  * 
  * @author Alberto Mardomingo
- * @version 20110714 0.2
+ * @version 20110716 0.3
  */
 public class BetMarket {
 	
 	// Hashmap with all the agents in the market
-	private HashMap<AID,Integer> agents = new HashMap<AID,Integer>();
+	private HashMap<AID,Integer> agents;
 	
 	// Hashmap with the name of the bet and the bet Itself.
-	private HashMap<String, Bet> bets = new HashMap<String, Bet>();
+	private HashMap<String, Bet> bets;
 	
+	// true if the bet can be process immediately
+	private boolean allowProcess;
+	
+	/**
+	 * Constructor
+	 * Creates the bet market, with all the parameters empty.
+	 *  
+	 */
+	public BetMarket(){
+		this.agents = new HashMap<AID,Integer>();
+		this.bets = new HashMap<String, Bet>();
+		this.allowProcess = false;
+	}
 	/**
 	 * Check if there is a bet with the same name
 	 * 
@@ -43,10 +56,16 @@ public class BetMarket {
 	public boolean makeBet(String name, Bet bet){
 		boolean result = false;
 		if (!bets.containsKey(name)){
-			// Adds the bet to the market
-			bets.put(name, bet);
-			result = true;
-			System.out.println("Bet " + name + " added to the market.");
+			if (allowProcess) {
+				// Runs the bet right away
+				runBet(bet);
+				System.out.println("The bet " + name + " has been realized.");
+			} else {
+				// Adds the bet to the market
+				bets.put(name, bet);
+				result = true;
+				System.out.println("Bet " + name + " added to the market.");
+			}
 		} else {
 			System.out.println("The bet " + name + "already exists in the market.");
 		}
@@ -96,14 +115,43 @@ public class BetMarket {
 	 */
 	public boolean runBets(){
 		boolean result = false;
-		//Iterator iter = bets.entrySet().iterator();
+		// Get an iterator to run through all the bets names, and the bets.
 		Set<String> betsNames = bets.keySet();
 		Iterator<String> iter = betsNames.iterator();
 		while (iter.hasNext()){
 			String betName = (String)iter.next();
 			Bet thisBet = bets.get(betName);
-			//TODO run the Bet.
+			runBet(thisBet);
+			//After running the bet, delete it
+			bets.remove(betName);
 		}
 		return result;	
+	}
+	
+	/**
+	 * Method to run each single bet
+	 * 
+	 * @param Bet - the bet to run
+	 */
+	public void runBet(Bet bet){
+		// TODO: run the bet.
+	}
+	
+	/**
+	 * Setter
+	 * 
+	 * @param status - true if the bets can be processed immediately
+	 */
+	public void setAllowProcess(boolean status) {
+		this.allowProcess = status;
+	}
+	
+	/**
+	 * Getter
+	 * 
+	 * @return true if the bets can be processed immediately
+	 */
+	public boolean getAllowProcess(){
+		return this.allowProcess;
 	}
 }

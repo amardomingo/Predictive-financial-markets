@@ -11,7 +11,7 @@ import java.util.Date;
  * Class to handle the message received by the Bet Market Agent
  * 
  * @author Alberto Mardomingo
- * @version 20110714 0.2
+ * @version 20110716 0.3
  */
 public class MessageBehavior extends CyclicBehaviour{
 	
@@ -51,10 +51,6 @@ public class MessageBehavior extends CyclicBehaviour{
 			Date date = new Date();
 			
 			// If the message sintaxis changes, all this go to hell.
-			// Variable moved to the head of the method.
-			//String[] mesContent = message.getContent().split("/");
-			// Once finished, this variables could be deleted
-			// by adding the calls directly in the bet constructor.
 			String name = mesContent[0];
 			BetType betType = parseBetType(mesContent[1]);
 			double money = Integer.parseInt(mesContent[2]);
@@ -69,8 +65,7 @@ public class MessageBehavior extends CyclicBehaviour{
 			// Probably a trace would be a good idea.
 			//block();			
 		}
-		/*
-		 * Response sintaxis:
+		/* Response sintaxis:
 		 * ActionName/Money/Result
 		 * Example
 		 * Santander/10000/false

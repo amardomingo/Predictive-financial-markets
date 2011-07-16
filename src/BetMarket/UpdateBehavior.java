@@ -11,7 +11,7 @@ import java.util.Date;
  * Behaviour to update the Bet Market
  * 
  * @author Alberto Mardomingo
- * @version 20110716 0.1
+ * @version 20110716 0.2
  */
 public class UpdateBehavior extends CyclicBehaviour {
 	
@@ -24,6 +24,7 @@ public class UpdateBehavior extends CyclicBehaviour {
 	public void action(){
 		betmarket.runBets();
 		// Basic implementation
+		// This should probably check the time, and change the variable allowProcess in betmarket.
 		// TODO: complete the UpdateBehavior implementation.
 	}
 
