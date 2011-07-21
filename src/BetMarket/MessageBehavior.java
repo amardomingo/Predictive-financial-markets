@@ -106,8 +106,8 @@ public class MessageBehavior extends CyclicBehaviour{
 		} else {
 			// Not really sure about this.
 			// Probably a trace would be a good idea.
-			//block();			
 		}
+		block();
 	}
 	
 	// Probably not necessary
