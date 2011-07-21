@@ -1,29 +1,35 @@
 package BetMarket;
 
-import java.util.Date;
+import jade.core.AID;
 
 /**
  * Class with the bet for the market
  * 
  * @author Alberto Mardomingo
- * @version 20110715 0.1
+ * @version 20110721 0.5
  */
 public class Bet {
 	
 	/**
-	 * The name of the bet
+	 * The agent making the bet 
 	 */
-	private String name;
+	private AID agentID;
 	
+	/**
+	 * Numeric code to identify the bet.
+	 */
+	private int code;
+	
+	// dates syntaxes: Year:Month:Day:Hour:Minute
 	/**
 	 * The date the bet is placed
 	 */
-	private Date dateAsked;
+	private String dateAsked;
 	
 	/**
 	 * The date the bet starts
 	 */
-	private Date dateStart;
+	private String dateStart;
 	
 	/**
 	 * The initial Value for the bet
@@ -50,6 +56,21 @@ public class Bet {
 	private BetType betType;
 	
 	/**
+	 * The money placed on the bet
+	 */
+	private double moneyInv;
+	
+	/**
+	 * The stock name
+	 */
+	private String stockName;
+	
+	/**
+	 *  The reward ratio
+	 */
+	private double reward;
+	
+	/**
 	 * Constructor
 	 * 
 	 * @param name - The name of the bet
@@ -58,21 +79,26 @@ public class Bet {
 	 * @param betOrder - The order to the market
 	 * @param betType - The type of the bet
 	 */
-	public Bet(String name, Date dateStart, double startValue, Order betOrder, BetType betType ){
-		this.name = name;
+	public Bet(int code, String dateStart, double startValue, Order betOrder, BetType betType, AID agentID, double moneyInv, String stockName){
+		this.code = code;
 		this.startValue = startValue;
 		this.betOrder = betOrder;
 		this.betType = betType;
-		this.dateStart = new Date();
+		this.dateStart = dateStart;
+		this.agentID = agentID;
+		this.moneyInv = moneyInv;
+		this.stockName = stockName;
+		// default value of 1.02 to reward
+		this.reward = 1.02;
 	}
 	
 	/**
 	 * Getter
 	 * 
-	 * @return string with the name of the bet.
+	 * @return code of the bet
 	 */
-	public String getName(){
-		return this.name;
+	public int getCode(){
+		return this.code;
 	}
 	
 	/**
@@ -80,7 +106,7 @@ public class Bet {
 	 * 
 	 * @return when the bet was placed
 	 */
-	public Date getDateAsked(){
+	public String getDateAsked(){
 		return this.dateAsked;
 	}
 	
@@ -89,14 +115,23 @@ public class Bet {
 	 * 
 	 * @return when the bet should start
 	 */
-	public Date getDateStart(){
+	public String getDateStart(){
 		return this.dateStart;
+	}
+	
+	/**
+	 * Setter
+	 * 
+	 * @param String - the time the bet is process
+	 */
+	public void setDateStart(String date){
+		this.dateStart = date;
 	}
 	
 	/**
 	 * Getter
 	 * 
-	 * @return double with the money to start the bet
+	 * @return StockValue with the money to start the bet
 	 */
 	public double getStartValue(){
 		return this.startValue;
@@ -104,18 +139,18 @@ public class Bet {
 	/**
 	 * Getter
 	 * 
-	 * @param double with the end value of the bet
+	 * @param StockValue with the end value of the bet
 	 */
-	private void setEndValue(double endValue) {
+	public void setEndValue(double endValue) {
 		this.endValue = endValue;
 	}
 	
 	/**
 	 * Setter
 	 * 
-	 * @return double with the end value of the bet
+	 * @return StockValue with the end value of the bet
 	 */
-	private double getEndValue() {
+	public double getEndValue() {
 		return endValue;
 	}
 
@@ -141,16 +176,71 @@ public class Bet {
 	 * 
 	 * @param bolean - the bet is complete.
 	 */
-	private void setBetDone(boolean betDone) {
+	public void setBetDone(boolean betDone) {
 		this.betDone = betDone;
 	}
 	
 	/**
-	 * Settet
+	 * Setter
 	 * 
 	 * @return true if the bet is complete
 	 */
-	private boolean getBetDone() {
+	public boolean getBetDone() {
 		return betDone;
+	}
+	
+	/**
+	 * Getter
+	 * 
+	 * @return the AID of the agent making the bet.
+	 */
+	public AID getAgentID(){
+		return this.agentID;
+	}
+	
+	/**
+	 * Getter
+	 * 
+	 * @return double - the money placed in the bet
+	 */
+	public double getMoney(){
+		return this.moneyInv;
+	}
+	
+	/**
+	 * Setter
+	 * Changes the stock name for the bet
+	 * 
+	 * @param stockName - the new name
+	 */
+	public void setStockName(String stockName) {
+		this.stockName = stockName;
+	}
+
+	/**
+	 * Getter
+	 * 
+	 * @return String - the stock name for the bet
+	 */
+	public String getStockName() {
+		return stockName;
+	}
+	
+	/**
+	 * Setter
+	 *  
+	 * @param reward - the new reward ratio.
+	 */
+	public void setReward(double reward) {
+		this.reward = reward;
+	}
+	
+	/**
+	 * Getter
+	 * 
+	 * @return double - the current reward ratio
+	 */
+	public double getReward() {
+		return reward;
 	}
 }

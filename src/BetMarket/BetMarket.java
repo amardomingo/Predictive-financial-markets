@@ -3,26 +3,37 @@ package BetMarket;
 import jade.core.Agent;
 import jade.core.AID;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
+
+import YahooParser.YahooParser;
 
 /**
  * Class to represent the Market.
  * 
  * @author Alberto Mardomingo
- * @version 20110716 0.3
+ * @version 20110721 0.5
  */
 public class BetMarket {
 	
-	// Hashmap with all the agents in the market
-	private HashMap<AID,Integer> agents;
+	// Opening time for the betmarket
+	public static final int OPEN = 900;
 	
-	// Hashmap with the name of the bet and the bet Itself.
-	private HashMap<String, Bet> bets;
+	// Closing time 
+	public static final int CLOSE = 1800;
+	
+	// Both integer to simplify comparisons.
+	
+	// List with all the bets;
+	private ArrayList<Bet> bets;
 	
 	// true if the bet can be process immediately
 	private boolean allowProcess;
+	
+	// Integer to control the number of bets.
+	private int counter;
 	
 	/**
 	 * Constructor
@@ -30,9 +41,9 @@ public class BetMarket {
 	 *  
 	 */
 	public BetMarket(){
-		this.agents = new HashMap<AID,Integer>();
-		this.bets = new HashMap<String, Bet>();
+		this.bets = new ArrayList<Bet>();
 		this.allowProcess = false;
+		this.counter = 0;
 	}
 	/**
 	 * Check if there is a bet with the same name
@@ -40,8 +51,12 @@ public class BetMarket {
 	 * @param name - the name of the bet.
 	 * @return true if the name is in use.
 	 */
-	public boolean existBet(String name){
-		return bets.containsKey(name);
+	public boolean existBet(int code){
+		boolean result = false;
+		for(Bet bet : bets){
+			if (bet.getCode() == code) result = true;
+		}
+		return result;
 	}
 
 	/**
@@ -53,60 +68,24 @@ public class BetMarket {
 	 * @param inverted - The money to invert.
 	 * @return true if the bet was placed correctly
 	 */
-	public boolean makeBet(String name, Bet bet){
+	public boolean makeBet(Bet bet){
 		boolean result = false;
-		if (!bets.containsKey(name)){
+		if (existBet(bet.getCode())){
 			if (allowProcess) {
 				// Runs the bet right away
 				runBet(bet);
 				result = true;
-				System.out.println("The bet " + name + " has been realized.");
+				System.out.println("The bet " + bet.getCode() + " has been realized.");
 			} else {
 				// Adds the bet to the market
-				bets.put(name, bet);
+				bets.add(bet);
 				result = true;
-				System.out.println("Bet " + name + " added to the market.");
+				System.out.println("Bet " + bet.getCode() + " added to the market.");
 			}
 		} else {
-			System.out.println("The bet " + name + "already exists in the market.");
+			System.out.println("The bet " + bet.getCode() + "already exists in the market.");
 		}
 		return result;
-	}
-	
-	/**
-	 * Checks if the agent has money enough to proceed with the bet
-	 * 
-	 * @param agent - The agent to check 
-	 * @param cost - The cost of the bet
-	 * @return true if he has money enough
-	 */
-	public boolean gotCapital(AID agentID, int cost){
-		return (cost <= agents.get(agentID));
-	}
-	
-	/**
-	 * Adds an agent to the bet market
-	 * 
-	 * @param agentID - The ID of the agent to add
-	 * @param money - The money of the agent.
-	 * @return true if added
-	 */
-	public boolean addAgent(AID agentID, int money){
-		boolean success = false;
-		if (!checkAgent(agentID)){
-			agents.put(agentID, money);
-			success = true;
-		}
-		return success;
-	}
-	/**
-	 * Check if the agent already exists
-	 * 
-	 * @param agentID - The ID of the agent to check
-	 * @return true it the agent exists
-	 */
-	public boolean checkAgent(AID agentID){
-		return agents.containsKey(agentID);
 	}
 	
 	/**
@@ -116,15 +95,10 @@ public class BetMarket {
 	 */
 	public boolean runBets(){
 		boolean result = false;
-		// Get an iterator to run through all the bets names, and the bets.
-		Set<String> betsNames = bets.keySet();
-		Iterator<String> iter = betsNames.iterator();
-		while (iter.hasNext()){
-			String betName = (String)iter.next();
-			Bet thisBet = bets.get(betName);
-			runBet(thisBet);
+		for (Bet bet: bets){
+			double prize = runBet(bet);
 			//After running the bet, delete it
-			bets.remove(betName);
+			bets.remove(bet);
 		}
 		bets.clear(); // Just in case
 		return result;	
@@ -134,9 +108,26 @@ public class BetMarket {
 	 * Method to run each single bet
 	 * 
 	 * @param Bet - the bet to run
+	 * @return true if everything goes well
 	 */
-	public void runBet(Bet bet){
-		// TODO: run the bet.
+	public double runBet(Bet bet){
+		double prize = 0;
+		try {
+			YahooParser parser = new YahooParser(bet.getStockName());
+			bet.setEndValue(parser.getStockPrice());
+			// Check if the value rises.
+			boolean valueUP = bet.getStartValue() < bet.getEndValue();
+			Order order = bet.getBetOrder();
+			if ((order.equals(Order.BET_UP) && valueUP || (order.equals(Order.BET_DOWN) && !valueUP))){
+				// WIN
+				// TODO: change this to the real ratio
+				double ratio = bet.getReward();
+				prize = ratio * bet.getMoney();
+			}
+		} catch(Exception e) {
+			//TODO handle exception in runBet.
+		}
+		return prize;
 	}
 	
 	/**
@@ -155,5 +146,14 @@ public class BetMarket {
 	 */
 	public boolean getAllowProcess(){
 		return this.allowProcess;
+	}
+	/**
+	 * Generates a new code for a bet.
+	 * 
+	 * @return the code for the bet. 
+	 */
+	public int generateCode(){
+		this.counter++;
+		return counter;
 	}
 }
