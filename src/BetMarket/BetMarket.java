@@ -2,8 +2,11 @@ package BetMarket;
 
 import jade.core.Agent;
 import jade.core.AID;
+import jade.tools.sniffer.Message;
+import jade.lang.acl.ACLMessage;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -35,12 +38,17 @@ public class BetMarket {
 	// Integer to control the number of bets.
 	private int counter;
 	
+	// The agent using this bet market
+	private BetMarketAgent agent;
+	
 	/**
 	 * Constructor
 	 * Creates the bet market, with all the parameters empty.
 	 *  
+	 *  @param BetMarketAgent - the agent using this bet market.
 	 */
-	public BetMarket(){
+	public BetMarket(BetMarketAgent agent){
+		this.agent = agent;
 		this.bets = new ArrayList<Bet>();
 		this.allowProcess = false;
 		this.counter = 0;
@@ -100,7 +108,7 @@ public class BetMarket {
 			//After running the bet, delete it
 			bets.remove(bet);
 		}
-		bets.clear(); // Just in case
+		// bets.clear(); // Not a good idea.
 		return result;	
 	}
 	
@@ -113,19 +121,36 @@ public class BetMarket {
 	public double runBet(Bet bet){
 		double prize = 0;
 		try {
-			YahooParser parser = new YahooParser(bet.getStockName());
-			bet.setEndValue(parser.getStockPrice());
-			// Check if the value rises.
-			boolean valueUP = bet.getStartValue() < bet.getEndValue();
-			Order order = bet.getBetOrder();
-			if ((order.equals(Order.BET_UP) && valueUP || (order.equals(Order.BET_DOWN) && !valueUP))){
-				// WIN
-				// TODO: change this to the real ratio
-				double ratio = bet.getReward();
-				prize = ratio * bet.getMoney();
+			if (checkDate(bet)){
+				YahooParser parser = new YahooParser(bet.getStockName());
+				bet.setEndValue(parser.getStockPrice());
+				// Check if the value rises.
+				boolean valueUP = bet.getStartValue() < bet.getEndValue();
+				Order order = bet.getBetOrder();
+				if ((order.equals(Order.BET_UP) && valueUP || (order.equals(Order.BET_DOWN) && !valueUP))){
+					// WIN
+					double ratio = bet.getReward();
+					prize = ratio * bet.getMoney();
+				}
+				ACLMessage msg = new ACLMessage( ACLMessage.INFORM );
+				/*
+				 * Response syntaxes:
+				 * NombreAccion/result/prize
+				 */
+	
+				String result = bet.getStockName();
+				if (prize > 0) {
+					result += "/win/" + prize;
+				} else {
+					result += "/false/0";
+				}
+				msg.setContent(result);
+				msg.addReceiver(bet.getAgentID());
+				this.agent.send(msg);
 			}
 		} catch(Exception e) {
-			//TODO handle exception in runBet.
+			System.out.println("Something went wrong when procesing the bet " + bet.getCode() + "in " + bet.getStockName());
+			System.out.println(e.getMessage());
 		}
 		return prize;
 	}
@@ -155,5 +180,28 @@ public class BetMarket {
 	public int generateCode(){
 		this.counter++;
 		return counter;
+	}
+	
+	/**
+	 * Check if the bet can be processed
+	 * according to the time it was supposed to last
+	 * 
+	 * @param Bet - the bet to check
+	 */
+	private boolean checkDate(Bet bet){
+		boolean result = false;
+		//TODO: complete this method, ading the year and improving the months change.
+		// dates syntaxes: Year:Month:Day:Hour:Minute
+		String[] startDate = (bet.getDateStart()).split(":");
+		int startMonth = Integer.parseInt(startDate[1]);
+		int startDay= Integer.parseInt(startDate[2]);
+		int currentDay = Calendar.DATE;
+		int currentMonth = Calendar.MONTH;
+		if (startMonth == currentMonth){
+			result = (currentDay - startDay) >= bet.getDays();
+		} else {
+			result = (currentDay - startDay + 30) >= bet.getDays();
+		}
+		return result;
 	}
 }

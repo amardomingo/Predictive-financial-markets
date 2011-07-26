@@ -1,5 +1,7 @@
 package BetMarket;
 
+import java.util.Calendar;
+
 import jade.core.AID;
 
 /**
@@ -30,6 +32,11 @@ public class Bet {
 	 * The date the bet starts
 	 */
 	private String dateStart;
+	
+	/**
+	 * The duration for the bet, in days.
+	 */
+	private int days;
 	
 	/**
 	 * The initial Value for the bet
@@ -88,8 +95,12 @@ public class Bet {
 		this.agentID = agentID;
 		this.moneyInv = moneyInv;
 		this.stockName = stockName;
+		// The date the bet was asked.
+		this.dateAsked = Calendar.YEAR + ":" + Calendar.MONTH + ":" + Calendar.DATE + ":" + Calendar.HOUR + ":" + Calendar.MINUTE;
 		// default value of 1.02 to reward
 		this.reward = 1.02;
+		// default value: right away
+		this.setDays(0);
 	}
 	
 	/**
@@ -128,6 +139,25 @@ public class Bet {
 		this.dateStart = date;
 	}
 	
+	/**
+	 * Setter
+	 * Sets the duration of the bet
+	 * 
+	 * @param days - the duration in days.
+	 */
+	public void setDays(int days) {
+		this.days = days;
+	}
+	
+	/**
+	 * Getter
+	 * 
+	 * @return int - the number of days
+	 */
+	public int getDays() {
+		return days;
+	}
+
 	/**
 	 * Getter
 	 * 

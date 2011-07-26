@@ -66,6 +66,7 @@ public class MessageBehavior extends CyclicBehaviour{
 				BetType betType = parseBetType(mesContent[1]);
 				double money = Integer.parseInt(mesContent[2]);
 				Order order = parseOrder(mesContent[3]);
+				int days = Integer.parseInt(mesContent[4]);
 			
 				// Creating and placing the bet
 				int code = betmarket.generateCode();
@@ -73,8 +74,14 @@ public class MessageBehavior extends CyclicBehaviour{
 				// Should probably check this.
 				YahooParser parser = new YahooParser(name);
 				StockValue val = MarketModel.Bet(order, money, name);
-			
+				
 				bet = new Bet(code, date, parser.getStockPrice(), order, betType, message.getSender(), money, name);
+				if (order.equals(Order.BET_UP)) {
+					bet.setReward(val.getBearValue());
+				} else {
+					bet.setReward(val.getBearValue());
+				}
+				bet.setDays(days);
 				result = betmarket.makeBet(bet);
 				
 				// Send a response
@@ -83,7 +90,6 @@ public class MessageBehavior extends CyclicBehaviour{
 				 * Example
 				 * Santander/10000/false
 				 */
-				
 				String response = mesContent[0] + "/" + mesContent[2] + "/";
 				response += result;
 				// Sending the reply

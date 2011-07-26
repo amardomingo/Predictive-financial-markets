@@ -1,5 +1,6 @@
 package BetMarket;
 
+import YahooParser.YahooParser;
 import jade.core.Agent;
 import jade.core.behaviours.*;
 import jade.lang.acl.*;
@@ -18,9 +19,8 @@ public class BetMarketAgent extends Agent {
 	 * Setting up the agent.
 	 * 
 	 */
-	// TODO finish the implementation of the agent
 	protected void setup() {
-		betmarket = new BetMarket();
+		betmarket = new BetMarket(this);
 		// Behavior to receive messages.
 		// This behavior also updates the allowProcess variable in betmarket.
 		addBehaviour( new MessageBehavior(receive(), betmarket, this));
