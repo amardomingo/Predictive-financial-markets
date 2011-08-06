@@ -135,10 +135,10 @@ public class BetMarket {
 				ACLMessage msg = new ACLMessage( ACLMessage.INFORM );
 				/*
 				 * Response syntaxes:
-				 * NombreAccion/result/prize
+				 * BetID/result/prize
 				 */
 	
-				String result = bet.getStockName();
+				String result = "" + bet.getCode();
 				if (prize > 0) {
 					result += "/win/" + prize;
 				} else {
@@ -190,7 +190,7 @@ public class BetMarket {
 	 */
 	private boolean checkDate(Bet bet){
 		boolean result = false;
-		//TODO: complete this method, ading the year and improving the months change.
+		//TODO: complete this method, adding the year and improving the months change.
 		// dates syntaxes: Year:Month:Day:Hour:Minute
 		String[] startDate = (bet.getDateStart()).split(":");
 		int startMonth = Integer.parseInt(startDate[1]);

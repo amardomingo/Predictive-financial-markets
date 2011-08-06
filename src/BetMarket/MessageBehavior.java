@@ -86,12 +86,11 @@ public class MessageBehavior extends CyclicBehaviour{
 				
 				// Send a response
 				/* Response syntaxes:
-				 * ActionName/Money/Result
+				 * ActionName/Money/Result/BetCode
 				 * Example
-				 * Santander/10000/false
+				 * Santander/10000/false/121
 				 */
-				String response = mesContent[0] + "/" + mesContent[2] + "/";
-				response += result;
+				String response = mesContent[0] + "/" + mesContent[2] + "/" + result + "/" + bet.getCode();
 				// Sending the reply
 				ACLMessage reply = message.createReply();
 				reply.setPerformative( ACLMessage.INFORM );

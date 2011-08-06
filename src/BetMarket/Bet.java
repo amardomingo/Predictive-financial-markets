@@ -113,6 +113,15 @@ public class Bet {
 	}
 	
 	/**
+	 * Setter
+	 * 
+	 * @param the new code
+	 */
+	public void setCode(int code){
+		this.code = code;
+	}
+	
+	/**
 	 * Getter
 	 * 
 	 * @return when the bet was placed
